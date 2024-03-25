@@ -1,0 +1,54 @@
+name: SampleDatasetPipeline    
+properties:    
+  activities:    
+  - name: CopyDataFromCSVToSynapse    
+    type: Copy    
+    typeProperties:    
+      source:    
+        type: DelimitedTextSource    
+        formatSettings:    
+          type: DelimitedTextReadSettings    
+          delimiter: ','    
+      sink:    
+        type: SqlSink    
+    inputs:    
+    - referenceName: SampleCSVInput    
+      type: DatasetReference    
+    outputs:    
+    - referenceName: SampleSynapseOutput    
+      type: DatasetReference    
+datasets:    
+- name: SampleCSVInput    
+  properties:    
+    type: DelimitedText    
+    typeProperties:    
+      location:    
+        type: AzureBlobStorageLocation    
+        container: 'data'    
+        folderPath: 'sample_data.csv'    
+    linkedServiceName:    
+      referenceName: AzureBlobStorageLinkedService    
+      type: LinkedServiceReference    
+- name: SampleSynapseOutput    
+  properties:    
+    type: SqlServerTable    
+    typeProperties:    
+      tableName: 'SampleDataset'    
+    linkedServiceName:    
+      referenceName: AzureSynapseLinkedService    
+      type: LinkedServiceReference    
+linkedServices:    
+- name: AzureBlobStorageLinkedService    
+  properties:    
+    type: AzureBlobStorage    
+    typeProperties:    
+      connectionString:    
+        type: SecureString    
+        value: 'your-azure-blob-storage-connection-string'    
+- name: AzureSynapseLinkedService    
+  properties:    
+    type: AzureSqlDatabase    
+    typeProperties:    
+      connectionString:    
+        type: SecureString    
+        value: 'your-azure-synapse-connection-string'  
