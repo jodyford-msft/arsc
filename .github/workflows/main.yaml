@@ -1,0 +1,23 @@
+name: Deploy Data Factory Pipeline  
+  
+on:  
+  push:  
+    branches:  
+      - main  
+  
+jobs:  
+  deploy:  
+    runs-on: ubuntu-latest  
+  
+    steps:  
+    - name: Checkout repository  
+      uses: actions/checkout@v2  
+  
+    - name: Replace connection strings  
+      run: |  
+        sed -i "s|'your-azure-blob-storage-connection-string'|'${{ secrets.AZURE_BLOB_CONNECTION_STRING }}'|g" SampleDatasetPipeline.yaml  
+        sed -i "s|'your-azure-synapse-connection-string'|'${{ secrets.CONNECTION_STRING }}'|g" SampleDatasetPipeline.yaml  
+  
+    - name: Deploy to Azure Data Factory  
+      run: |  
+        # Add your deployment script here  
